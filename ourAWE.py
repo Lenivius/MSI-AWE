@@ -10,25 +10,33 @@ class OurAWE(BaseEnsemble, ClassifierMixin):
         self.base_estimator = base_estimator
         self.n_estimators = n_estimators
         self.n_kfsplits = n_kfsplits
-        np.random.seed(self.random_state)
 
     def fit(self, X, y):
+        self.partial_fit(X, y)
+
+        return self
+
+    def partial_fit(self, X, y, classes=None):
         X, y = check_X_y(X, y)
-        self.classes_ = np.unique(y)
+        
+        self.classes_ = classes
+        if self.classes_ is None:
+            self.classes_, _ = np.unique(y, return_inverse=True)
+
         if not hasattr(self, 'ensemble_'):
             self.ensemble_ = []
 
         self.X_ = X
         self.y_ = y
 
-
-
-        return self
+        #### TO BE CONTINUED
 
 
     def predict(self, X):
-        #### TO BE DONE
+        check_is_fitted(self, "classes_")   #### SPRAWDZENIE CZY JEST NAUCZONY
+        X = check_array(X)                  #### SPRAWDZENIE WEJŚCIA
+        if X.shape[1] != self.X_.shape[1]:
+            raise ValueError("Liczba cech się nie zgadza")
 
 
-    def ensemble_support_matrix(self, X):
-        #### TO BE DONE
+        #### TO BE CONTINUED
