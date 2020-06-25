@@ -25,15 +25,15 @@ rand_states = [
 clfs = [
     sl.ensembles.SEA(GaussianNB()),
     sl.ensembles.AUE(GaussianNB()),
-    sl.ensembles.AWE(GaussianNB()),
-    sl.ensembles.WAE(GaussianNB())
+    sl.ensembles.WAE(GaussianNB()),
+    sl.ensembles.AWE(GaussianNB())
     #OurAWE(GaussianNB())
 ]
 clf_names = [
     'SEA',
     'AUE',
-    'AWE',
-    'WAE'
+    'WAE',
+    'AWE'
     #'OurAWE'
 ]
 
@@ -50,8 +50,8 @@ streams_list = [[] for i in range (3)]  #### LISTA TRZECH LIST ZAWIERAJĄCYCH ST
 """ GENEROWANIE STRUMIENI DANYCH """
 for rstate in rand_states:
     stream = sl.streams.StreamGenerator(
-        n_chunks = 20,
-        chunk_size = 100,
+        n_chunks = 200,
+        chunk_size = 250,
         random_state = rstate,
         n_features = 10,
         n_classes = 2,
@@ -60,8 +60,8 @@ for rstate in rand_states:
     streams_list[0].append(stream)      #### LISTA STRUMIENI Z DRYFEM NAGŁYM
 
     stream = sl.streams.StreamGenerator(
-        n_chunks = 20,
-        chunk_size = 100,
+        n_chunks = 200,
+        chunk_size = 250,
         random_state = rstate,
         n_features = 10,
         n_classes = 2,
@@ -71,8 +71,8 @@ for rstate in rand_states:
     streams_list[1].append(stream)      #### LISTA STRUMIENI Z DRYFEM DUALNY
 
     stream = sl.streams.StreamGenerator(
-        n_chunks = 20,
-        chunk_size = 100,
+        n_chunks = 200,
+        chunk_size = 250,
         random_state = rstate,
         n_features = 10,
         n_classes = 2,
@@ -122,7 +122,7 @@ for st_id, stream_ in enumerate(streams_list):
             t_statistic[i, j], p_value[i, j] = ttest_ind(avg_mean_scores[i], avg_mean_scores[j])
 
     """ TWORZENIE TABELI FORMATUJĄCEJ WYNIKI """
-    names_column = np.array([["SEA"], ["AUE"], ["AWE"], ["WAE"]])
+    names_column = np.array([["SEA"], ["AUE"], ["WAE"], ["AWE"]])
     t_statistic_table = np.concatenate((names_column, t_statistic), axis=1)
     t_statistic_table = tabulate(t_statistic_table, clf_names, floatfmt=".2f")
     p_value_table = np.concatenate((names_column, p_value), axis=1)
