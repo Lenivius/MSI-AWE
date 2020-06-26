@@ -117,9 +117,19 @@ for st_id, stream_ in enumerate(streams_list):
     avg_mean_scores = []
     for ms in mean_scores:
         avg_mean_scores.append(np.mean(ms, axis = 0))
-
+    
     """ PAROWE TESTY STATYSTYCZNE """
     print("\n -----||| ANALIZA STATYSTYCZNA DLA {} |||-----\n".format(streams_names[st_id]))
+
+    """ TABELA ŚREDNIEJ DOKŁADNOŚCI PREDYKCJI """
+    mean_accuracy = [[np.mean(avg_mean_scores[i])] for i in range (len(clfs))]
+    names_column = np.array([["SEA"], ["AUE"], ["WAE"], ["AWE"], ["OurAWE"]])
+    accuracy_header = ["Algorytm", "F1_score", "G-mean", "Balanced accuracy", "Średnia"]
+    mean_accuracy_table = np.concatenate((names_column, avg_mean_scores), axis=1)
+    mean_accuracy_table = np.concatenate((mean_accuracy_table, np.array(mean_accuracy)), axis=1)
+    mean_accuracy_table = tabulate(mean_accuracy_table, accuracy_header, floatfmt=".2f")
+    print("Średnia dokładność predykcji algorytmów dla poszczególnych metryk:\n", mean_accuracy_table, "\n")
+
     t_statistic = np.zeros((len(clfs), len(clfs)))
     p_value = np.zeros((len(clfs), len(clfs)))
 
@@ -128,7 +138,6 @@ for st_id, stream_ in enumerate(streams_list):
             t_statistic[i, j], p_value[i, j] = ttest_ind(avg_mean_scores[i], avg_mean_scores[j])
 
     """ TWORZENIE TABELI FORMATUJĄCEJ WYNIKI """
-    names_column = np.array([["SEA"], ["AUE"], ["WAE"], ["AWE"], ["OurAWE"]])
     t_statistic_table = np.concatenate((names_column, t_statistic), axis=1)
     t_statistic_table = tabulate(t_statistic_table, clf_names, floatfmt=".2f")
     p_value_table = np.concatenate((names_column, p_value), axis=1)
@@ -150,7 +159,7 @@ for st_id, stream_ in enumerate(streams_list):
     """ WYNIK KOŃCOWY ANALIZY STATYSTYCZNEJ (ALGORYTMY STATYSTYCZNIE ZNACZĄCO LEPSZE OD POZOSTAŁYCH) """
     stat_better = significance * advantage
     stat_better_table = tabulate(np.concatenate((names_column, stat_better), axis=1), clf_names)
-    print("Lepszy znacząco statystycznie:\n", stat_better_table, "\n")
+    print("Statystycznie znacząco lepszy:\n", stat_better_table, "\n")
 
     """ RYSOWANIE WYKRESU WYNIKÓW EWALUACJI """
     fig, ax = plt.subplots(1, len(metrics), figsize=(24, 8), num = "Wykresy dla {}".format(streams_names[st_id].lower()))
