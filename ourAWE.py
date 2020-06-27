@@ -6,10 +6,12 @@ from sklearn.model_selection import StratifiedKFold
 
 
 class OurAWE(BaseEnsemble, ClassifierMixin):
-    def __init__(self, base_estimator = None, n_estimators = 10, n_skfsplits = 5):
+    def __init__(self, base_estimator = None, n_estimators = 10, n_skfsplits = 5, rnd_state = None):
         self.base_estimator = base_estimator
         self.n_estimators = n_estimators
         self.n_skfsplits = n_skfsplits
+        self.rnd_state = rnd_state
+        self.shuffle = False
 
     def fit(self, X, y):
         self.partial_fit(X, y)
@@ -36,7 +38,9 @@ class OurAWE(BaseEnsemble, ClassifierMixin):
         p_c = np.unique(self.y_, return_counts = True)[1] / len(self.y_)
         MSEr = np.sum(p_c * (1 - p_c) ** 2)
 
-        skf = StratifiedKFold(n_splits = self.n_skfsplits)
+        if self.rnd_state is not None:
+            self.shuffle = True
+        skf = StratifiedKFold(n_splits = self.n_skfsplits, random_state = self.rnd_state, shuffle = self.shuffle)
 
         scores = []
         for train, test in skf.split(X, y):
