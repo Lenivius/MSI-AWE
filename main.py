@@ -42,7 +42,8 @@ clf_names = [
 n_chunks = 200              #### LICZBA BLOKÓW DANYCH
 chunk_size = 250            #### ROZMIAR BLOKU DANYCH
 n_drifts = 3                #### LICZBA WYSTĄPIENIA DRYFU KONCEPCJI W STRUMIENIU
-
+n_features = 10             #### LICZBA CECH
+n_classes = 2               #### LICZBA KLAS PROBLEMU
 
 alfa = .05                  #### PRÓG NIEPEWNOŚCI
 scores = []                 #### TABLICA PRZECHOWUJĄCA WYNIKI POSZCZEGÓLNYCH EWALUACJI
@@ -60,8 +61,8 @@ for rstate in rand_states:
         n_chunks = n_chunks,
         chunk_size = chunk_size,
         random_state = rstate,
-        n_features = 10,
-        n_classes = 2,
+        n_features = n_features,
+        n_classes = n_classes,
         n_drifts = n_drifts
     )
     streams_list[0].append(stream)      #### LISTA STRUMIENI Z DRYFEM NAGŁYM
@@ -70,8 +71,8 @@ for rstate in rand_states:
         n_chunks = n_chunks,
         chunk_size = chunk_size,
         random_state = rstate,
-        n_features = 10,
-        n_classes = 2,
+        n_features = n_features,
+        n_classes = n_classes,
         n_drifts = n_drifts,
         concept_sigmoid_spacing = 5
     )
@@ -81,8 +82,8 @@ for rstate in rand_states:
         n_chunks = n_chunks,
         chunk_size = chunk_size,
         random_state = rstate,
-        n_features = 10,
-        n_classes = 2,
+        n_features = n_features,
+        n_classes = n_classes,
         n_drifts = n_drifts,
         concept_sigmoid_spacing = 5,
         incremental = True
